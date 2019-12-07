@@ -20,7 +20,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 
-FROM openjdk:8-jdk
+FROM ubuntu:18.04
 LABEL MAINTAINER="Nicolas De Loof <nicolas.deloof@gmail.com>"
 
 ARG user=jenkins
@@ -37,6 +37,7 @@ RUN groupadd -g ${gid} ${group} \
 # setup SSH server
 RUN apt-get update \
     && apt-get install --no-install-recommends -y openssh-server \
+    && apt-get install -y default-jre \
     && rm -rf /var/lib/apt/lists/*
 RUN sed -i /etc/ssh/sshd_config \
         -e 's/#PermitRootLogin.*/PermitRootLogin no/' \
