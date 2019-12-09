@@ -20,8 +20,10 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 
+# Maintainer of original image: Nicolas De Loof <nicolas.deloof@gmail.com>
+
 FROM ubuntu:18.04
-LABEL MAINTAINER="Nicolas De Loof <nicolas.deloof@gmail.com>"
+LABEL MAINTAINER="Philip Edwards <philip@gdcorner.com"
 
 ARG user=jenkins
 ARG group=jenkins
