@@ -38,6 +38,8 @@ RUN groupadd -g ${gid} ${group} \
 RUN apt-get update \
     && apt-get install --no-install-recommends -y openssh-server \
     && apt-get install -y default-jre \
+    && apt-get install -y build-essential \
+    && apt-get install -y git \
     && rm -rf /var/lib/apt/lists/*
 RUN sed -i /etc/ssh/sshd_config \
         -e 's/#PermitRootLogin.*/PermitRootLogin no/' \
