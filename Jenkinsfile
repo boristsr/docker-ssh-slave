@@ -1,49 +1,39 @@
-/* NOTE: this Pipeline mainly aims at catching mistakes (wrongly formed Dockerfile, etc.)
- * This Pipeline is *not* used for actual image publishing.
- * This is currently handled through Automated Builds using standard Docker Hub feature
-*/
 pipeline {
-    agent none
+    //Run only on docker agents compatible with jekyll
+    agent { label 'docker' }
 
     options {
-        buildDiscarder(logRotator(daysToKeepStr: '10'))
-        timestamps()
+        timeout(time: 1, unit: 'HOURS') 
     }
 
-    triggers {
-        pollSCM('H/24 * * * *') // once a day in case some hooks are missed
-    }
+    environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub-accesstoken')
+        IMAGE_NAME='boristsr/jenkins-ssh-slave'
+	}
 
     stages {
-        stage('Build Docker Image') {
-            parallel {
-                stage('Windows') {
-                    agent {
-                        label "windock"
-                    }
-                    options {
-                        timeout(time: 60, unit: 'MINUTES')
-                    }
-                    steps {
-                        checkout scm
-                        powershell "& ./make.ps1"
-                    }
-                }
-                stage('Linux') {
-                    agent {
-                        label "docker&&linux"
-                    }
-                    options {
-                        timeout(time: 30, unit: 'MINUTES')
-                    }
-                    steps {
-                        checkout scm
-                        sh "make build"
-                    }
-                }
+        stage('Build Image') {
+            steps {
+                //Execute build
+                sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER -t $IMAGE_NAME:latest .'
+            }
+        }
+        stage('Login') {
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+        stage('Push Image') {
+            steps {
+                sh 'docker push $IMAGE_NAME:$BUILD_NUMBER'
+                sh 'docker push $IMAGE_NAME:latest'
             }
         }
     }
-}
 
-// vim: ft=groovy
+    post {
+		always {
+			sh 'docker logout'
+		}
+	}
+}
