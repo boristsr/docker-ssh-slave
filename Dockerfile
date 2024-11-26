@@ -22,7 +22,7 @@
 
 # Maintainer of original image: Nicolas De Loof <nicolas.deloof@gmail.com>
 
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 LABEL MAINTAINER="Philip Edwards <philip@gdcorner.com>"
 
 ARG user=jenkins
