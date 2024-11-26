@@ -27,8 +27,8 @@ LABEL MAINTAINER="Philip Edwards <philip@gdcorner.com>"
 
 ARG user=jenkins
 ARG group=jenkins
-ARG uid=1000
-ARG gid=1000
+ARG uid=1009
+ARG gid=1009
 ARG JENKINS_AGENT_HOME=/home/${user}
 
 ENV JENKINS_AGENT_HOME ${JENKINS_AGENT_HOME}
